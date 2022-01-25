@@ -23,7 +23,7 @@ Name:           grub2
 %ifarch x86_64 ppc64
 BuildRequires:  gcc-32bit
 BuildRequires:  glibc-32bit
-BuildRequires:  glibc-devel-32bit glibc-32bit
+BuildRequires:  glibc-devel-32bit
 %else
 BuildRequires:  gcc
 BuildRequires:  glibc-devel
@@ -150,7 +150,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        17.2
+Release:        18.1
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -1327,6 +1327,9 @@ fi
 - Power guest secure boot with static keys: GRUB2 signing portion
   (jsc#SLE-18271) (bsc#1192764)
   * 0001-grub-install-Add-SUSE-signed-image-support-for-power.patch
+* Thu Jan 13 2022 Michael Chang <mchang@suse.com>
+- Fix wrong default entry when booting snapshot (bsc#1159205)
+  * grub2-btrfs-08-workaround-snapshot-menu-default-entry.patch
 * Tue Jan 11 2022 Michael Chang <mchang@suse.com>
 - Power guest secure boot with static keys: GRUB2 signing portion
   (jsc#SLE-18271) (bsc#1192764)

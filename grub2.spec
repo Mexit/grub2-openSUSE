@@ -23,7 +23,7 @@ Name:           grub2
 %ifarch x86_64 ppc64
 BuildRequires:  gcc-32bit
 BuildRequires:  glibc-32bit
-BuildRequires:  glibc-devel-32bit
+BuildRequires:  glibc-devel-32bit glibc-32bit
 %else
 BuildRequires:  gcc
 BuildRequires:  glibc-devel
@@ -150,7 +150,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        18.1
+Release:        19.2
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -1323,6 +1323,10 @@ fi
 %endif
 
 %changelog
+* Thu Feb 10 2022 Bjørn Lie <bjorn.lie@gmail.com>
+- Set grub2-check-default shebang to "#!/bin/bash", as the the code
+  uses many instructions which are undefined for a POSIX sh.
+  (boo#1195794).
 * Fri Jan 14 2022 Michael Chang <mchang@suse.com>
 - Power guest secure boot with static keys: GRUB2 signing portion
   (jsc#SLE-18271) (bsc#1192764)

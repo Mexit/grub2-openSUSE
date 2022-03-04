@@ -23,7 +23,7 @@ Name:           grub2
 %ifarch x86_64 ppc64
 BuildRequires:  gcc-32bit
 BuildRequires:  glibc-32bit
-BuildRequires:  glibc-devel-32bit glibc-32bit
+BuildRequires:  glibc-devel-32bit
 %else
 BuildRequires:  gcc
 BuildRequires:  glibc-devel
@@ -53,10 +53,8 @@ BuildRequires:  python
 %endif
 BuildRequires:  xz-devel
 %ifarch x86_64 aarch64 ppc ppc64 ppc64le
-%if 0%{?suse_version} >= 1230 || 0%{?suse_version} == 1110
 BuildRequires:  openssl >= 0.9.8
 BuildRequires:  pesign-obs-integration
-%endif
 %endif
 %if 0%{?suse_version} >= 1210
 # Package systemd services files grub2-once.service
@@ -150,7 +148,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        19.2
+Release:        20.1
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -675,7 +673,6 @@ echo "grub.${distro_id},${distro_sbat},${distro_name},%{name},%{version},mail:se
 %endif
 
 %ifarch x86_64 aarch64
-%if 0%{?suse_version} >= 1230 || 0%{?suse_version} == 1110
 if test -e %{_sourcedir}/_projectcert.crt ; then
     prjsubject=$(openssl x509 -in %{_sourcedir}/_projectcert.crt -noout -subject_hash)
     prjissuer=$(openssl x509 -in %{_sourcedir}/_projectcert.crt -noout -issuer_hash)
@@ -697,7 +694,6 @@ if test -z "$cert" ; then
 fi
 
 openssl x509 -in $cert -outform DER -out grub.der
-%endif
 %endif
 
 cd ..
@@ -729,8 +725,11 @@ TLFLAGS="-static"
 make %{?_smp_mflags}
 
 if [ "%{platform}" = "ieee1275" ]; then
-        cert="%{_sourcedir}/_projectcert.crt"
-        openssl x509 -in "$cert" -outform DER -out grub.der
+        # So far neither OpenFirmware nor grub support CA chain, only certificate pinning
+        # Use project certificate always in the shipped informational file and
+        # for kernel verification
+        projectcert="%{_sourcedir}/_projectcert.crt"
+        openssl x509 -in "$projectcert" -outform DER -out grub.der
         cat > %{platform}-config <<'EOF'
 set root=memdisk
 set prefix=($root)/
@@ -835,13 +834,11 @@ EoM
 %endif
 
 %ifarch x86_64 aarch64
-%if 0%{?suse_version} >= 1230 || 0%{?suse_version} == 1110
 export BRP_PESIGN_FILES="%{_datadir}/%{name}/%{grubefiarch}/grub.efi"
 %ifarch x86_64
 BRP_PESIGN_FILES="${BRP_PESIGN_FILES} %{_datadir}/%{name}/%{grubefiarch}/grub-tpm.efi"
 %endif
 install -m 444 grub.der %{buildroot}/%{sysefidir}/
-%endif
 %endif
 
 cd ..
@@ -1285,9 +1282,7 @@ fi
 %endif
 
 %ifarch x86_64 aarch64
-%if 0%{?suse_version} >= 1230 || 0%{?suse_version} == 1110
 %{sysefidir}/grub.der
-%endif
 %endif
 
 %files %{grubefiarch}-debug
@@ -1323,6 +1318,9 @@ fi
 %endif
 
 %changelog
+* Tue Mar  1 2022 Michal Suchanek <msuchanek@suse.com>
+- Remove obsolete openSUSE 12.2 conditionals in spec file
+- Clean up powerpc certificate handling.
 * Thu Feb 10 2022 Bjørn Lie <bjorn.lie@gmail.com>
 - Set grub2-check-default shebang to "#!/bin/bash", as the the code
   uses many instructions which are undefined for a POSIX sh.

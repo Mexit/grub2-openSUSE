@@ -148,7 +148,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        20.1
+Release:        21.1
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -351,6 +351,11 @@ Patch833:       0021-appended-signatures-documentation.patch
 Patch834:       0022-ieee1275-enter-lockdown-based-on-ibm-secure-boot.patch
 Patch835:       0023-x509-allow-Digitial-Signature-plus-other-Key-Usages.patch
 Patch836:       0001-grub-install-Add-SUSE-signed-image-support-for-power.patch
+Patch837:       0001-Add-grub_envblk_buf-helper-function.patch
+Patch838:       0002-Add-grub_disk_write_tail-helper-function.patch
+Patch839:       0003-grub-install-support-prep-environment-block.patch
+Patch840:       0004-Introduce-prep_load_env-command.patch
+Patch841:       0005-export-environment-at-start-up.patch
 
 Requires:       gettext-runtime
 %if 0%{?suse_version} >= 1140
@@ -636,7 +641,7 @@ CD_MODULES="${CD_MODULES} linux"
 
 GRUB_MODULES="${CD_MODULES} ${FS_MODULES} ${PXE_MODULES} ${CRYPTO_MODULES} mdraid09 mdraid1x lvm serial"
 %ifarch ppc ppc64 ppc64le
-GRUB_MODULES="${GRUB_MODULES} appendedsig memdisk tar regexp"
+GRUB_MODULES="${GRUB_MODULES} appendedsig memdisk tar regexp prep_loadenv"
 %endif
 
 %ifarch %{efi}
@@ -743,39 +748,76 @@ echo "bdev=$bdev"
 echo "bpart=$bpart"
 echo "bpath=$bpath"
 
+if [ "$btrfs_relative_path" = xy ]; then
+  btrfs_relative_path=1
+fi
+
 if [ "$bdev" -a "$bpart" -a "$bpath" ]; then
-  hints="--hint $bdev$bpart"
-  cfg_dir="$bpath"
+  set hints="--hint $bdev$bpart"
+  set cfg_dir="$bpath"
 elif [ "$bdev" -a "$bpart" ]; then
-  hints="--hint $bdev$bpart"
-  cfg_dir="/boot/grub2 /grub2"
+  set hints="--hint $bdev$bpart"
+  set cfg_dir="/boot/grub2 /grub2"
+  set btrfs_relative_path=1
 elif [ "$bdev" ]; then
-  hints="--hint ${bdev},"
-  cfg_dir="/boot/grub2 /grub2"
+  if [ "$ENV_HINT" ]; then
+    set hints="--hint $ENV_HINT"
+  else
+    set hints="--hint ${bdev},"
+  fi
+  if [ "$ENV_GRUB_DIR" ]; then
+    set cfg_dir="$ENV_GRUB_DIR"
+  else
+    set cfg_dir="/boot/grub2 /grub2"
+    set btrfs_relative_path=1
+  fi
 else
-  hints=""
-  cfg_dir="/boot/grub2 /grub2"
+  set hints=""
+  set cfg_dir="/boot/grub2 /grub2"
+  set btrfs_relative_path=1
 fi
 
 set prefix=""
 set root=""
 set cfg="grub.cfg"
+
+if [ "$ENV_CRYPTO_UUID" ]; then
+  cryptomount -u "$ENV_CRYPTO_UUID"
+fi
+
+if [ "$ENV_FS_UUID" ]; then
+  echo "searching for $ENV_FS_UUID with $hints"
+  if search --fs-uuid --set=root "$ENV_FS_UUID" $hints; then
+    echo "$ENV_FS_UUID is on $root"
+  fi
+fi
+
 for d in ${cfg_dir}; do
-  set btrfs_relative_path=1
-  echo "start searching for $d/${cfg} with $hints"
-  if search --file --set=root "${d}/${cfg}" $hints; then
+  if [ -z "$root" ]; then
+    echo "searching for ${d}/${cfg}"
+    if search --file --set=root "${d}/${cfg}" $hints; then
+      echo "${d}/${cfg} is on $root"
+      prefix="($root)${d}"
+    fi
+  elif [ -f "${d}/${cfg}" ]; then
     echo "${d}/${cfg} is on $root"
-    set btrfs_relative_path=0
+    prefix="($root)${d}"
+  else
+    echo "${d}/${cfg} not found in $root"
+  fi
+
+  if [ "$prefix" -a x"$btrfs_relative_path" = x1 ]; then
+    btrfs_relative_path=0
     if [ -f /@"${d}"/powerpc-ieee1275/command.lst ]; then
-      set btrfs_relative_path=1
+      btrfs_relative_path=1
       echo "mounting subvolume @${d}/powerpc-ieee1275 on ${d}/powerpc-ieee1275"
       btrfs-mount-subvol ($root) "${d}"/powerpc-ieee1275 @"${d}"/powerpc-ieee1275
     fi
-    set btrfs_relative_path=1
-    set prefix="($root)${d}"
+    btrfs_relative_path=1
     break
   fi
 done
+
 echo "prefix=$prefix root=$root"
 if [ -n "$prefix" ]; then
   source "${prefix}/${cfg}"
@@ -1318,6 +1360,15 @@ fi
 %endif
 
 %changelog
+* Fri Mar  4 2022 Michael Chang <mchang@suse.com>
+- Support saving grub environment for POWER signed grub images (jsc#SLE-23854)
+  * 0001-Add-grub_envblk_buf-helper-function.patch
+  * 0002-Add-grub_disk_write_tail-helper-function.patch
+  * 0003-grub-install-support-prep-environment-block.patch
+  * 0004-Introduce-prep_load_env-command.patch
+  * 0005-export-environment-at-start-up.patch
+- Use enviroment variable in early boot config to looking up root device
+  * grub2.spec
 * Tue Mar  1 2022 Michal Suchanek <msuchanek@suse.com>
 - Remove obsolete openSUSE 12.2 conditionals in spec file
 - Clean up powerpc certificate handling.

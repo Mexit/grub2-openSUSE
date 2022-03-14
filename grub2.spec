@@ -148,7 +148,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        21.1
+Release:        22.3
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -356,6 +356,9 @@ Patch838:       0002-Add-grub_disk_write_tail-helper-function.patch
 Patch839:       0003-grub-install-support-prep-environment-block.patch
 Patch840:       0004-Introduce-prep_load_env-command.patch
 Patch841:       0005-export-environment-at-start-up.patch
+Patch842:       0001-grub-install-bailout-root-device-probing.patch
+Patch843:       0001-RISC-V-Adjust-march-flags-for-binutils-2.38.patch
+Patch844:       0001-install-fix-software-raid1-on-esp.patch
 
 Requires:       gettext-runtime
 %if 0%{?suse_version} >= 1140
@@ -1360,6 +1363,17 @@ fi
 %endif
 
 %changelog
+* Fri Mar 11 2022 Michael Chang <mchang@suse.com>
+- Fix grub-install error when efi system partition is created as mdadm software
+  raid1 device (bsc#1179981) (bsc#1195204)
+  * 0001-install-fix-software-raid1-on-esp.patch
+* Thu Mar 10 2022 Michael Chang <mchang@suse.com>
+- Fix riscv64 build error
+  * 0001-RISC-V-Adjust-march-flags-for-binutils-2.38.patch
+* Thu Mar 10 2022 Michael Chang <mchang@suse.com>
+- Fix error in grub-install when linux root device is on lvm thin volume
+  (bsc#1192622) (bsc#1191974)
+  * 0001-grub-install-bailout-root-device-probing.patch
 * Fri Mar  4 2022 Michael Chang <mchang@suse.com>
 - Support saving grub environment for POWER signed grub images (jsc#SLE-23854)
   * 0001-Add-grub_envblk_buf-helper-function.patch
@@ -1447,7 +1461,7 @@ fi
 - Use /usr/lib/os-release as fallback (bsc#1191196)
   * grub2-default-distributor.patch
   * grub2-check-default.sh
-- VUL-0: grub2: grub2-once uses fixed file name in /var/tmp (bsc#1190474)
+- VUL-0: grub2: grub2-once uses fixed file name in /var/tmp (bsc#1190474) (CVE-2021-46705)
   * grub2-once
   * grub2-once.service
 - Fix unknown TPM error on buggy uefi firmware (bsc#1191504)

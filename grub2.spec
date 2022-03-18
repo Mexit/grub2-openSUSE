@@ -148,7 +148,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        22.3
+Release:        24.1
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -359,6 +359,10 @@ Patch841:       0005-export-environment-at-start-up.patch
 Patch842:       0001-grub-install-bailout-root-device-probing.patch
 Patch843:       0001-RISC-V-Adjust-march-flags-for-binutils-2.38.patch
 Patch844:       0001-install-fix-software-raid1-on-esp.patch
+Patch845:       0001-mkimage-Fix-dangling-pointer-may-be-used-error.patch
+Patch846:       0002-Fix-Werror-array-bounds-array-subscript-0-is-outside.patch
+Patch847:       0003-reed_solomon-Fix-array-subscript-0-is-outside-array-.patch
+Patch848:       0001-grub-probe-Deduplicate-probed-partmap-output.patch
 
 Requires:       gettext-runtime
 %if 0%{?suse_version} >= 1140
@@ -1363,6 +1367,17 @@ fi
 %endif
 
 %changelog
+* Fri Mar 18 2022 Michael Chang <mchang@suse.com>
+- Fix duplicated insmod part_gpt lines in grub.cfg (bsc#1197186)
+  * 0001-grub-probe-Deduplicate-probed-partmap-output.patch
+* Wed Mar 16 2022 Michael Chang <mchang@suse.com>
+- Fix GCC 12 build failure (bsc#1196546)
+  * 0001-mkimage-Fix-dangling-pointer-may-be-used-error.patch
+  * 0002-Fix-Werror-array-bounds-array-subscript-0-is-outside.patch
+  * 0003-reed_solomon-Fix-array-subscript-0-is-outside-array-.patch
+- Revised
+  * grub2-btrfs-01-add-ability-to-boot-from-subvolumes.patch
+  * 0002-ieee1275-powerpc-enables-device-mapper-discovery.patch
 * Fri Mar 11 2022 Michael Chang <mchang@suse.com>
 - Fix grub-install error when efi system partition is created as mdadm software
   raid1 device (bsc#1179981) (bsc#1195204)

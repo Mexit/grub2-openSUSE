@@ -148,7 +148,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        24.1
+Release:        26.2
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -1367,6 +1367,10 @@ fi
 %endif
 
 %changelog
+* Fri Mar 25 2022 Michael Chang <mchang@suse.com>
+- Fix wrong order in kernel sorting of listing rc before final release
+  (bsc#1197376)
+  * grub2-use-rpmsort-for-version-sorting.patch
 * Fri Mar 18 2022 Michael Chang <mchang@suse.com>
 - Fix duplicated insmod part_gpt lines in grub.cfg (bsc#1197186)
   * 0001-grub-probe-Deduplicate-probed-partmap-output.patch

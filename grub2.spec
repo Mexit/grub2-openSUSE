@@ -156,7 +156,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        27.1
+Release:        28.1
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -371,6 +371,7 @@ Patch845:       0001-mkimage-Fix-dangling-pointer-may-be-used-error.patch
 Patch846:       0002-Fix-Werror-array-bounds-array-subscript-0-is-outside.patch
 Patch847:       0003-reed_solomon-Fix-array-subscript-0-is-outside-array-.patch
 Patch848:       0001-grub-probe-Deduplicate-probed-partmap-output.patch
+Patch849:       0001-powerpc-do-CAS-in-a-more-compatible-way.patch
 
 Requires:       gettext-runtime
 %if 0%{?suse_version} >= 1140
@@ -1367,6 +1368,10 @@ fi
 %endif
 
 %changelog
+* Thu Apr 21 2022 Michael Chang <mchang@suse.com>
+- Fix Power10 LPAR error "The partition fails to activate as partition went
+  into invalid state" (bsc#1198714)
+  * 0001-powerpc-do-CAS-in-a-more-compatible-way.patch
 * Mon Apr 11 2022 Ludwig Nussel <lnussel@suse.de>
 - use common SBAT values (boo#1193282)
 * Fri Mar 25 2022 Michael Chang <mchang@suse.com>

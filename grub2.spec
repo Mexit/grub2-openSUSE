@@ -156,7 +156,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        28.1
+Release:        29.1
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -372,6 +372,8 @@ Patch846:       0002-Fix-Werror-array-bounds-array-subscript-0-is-outside.patch
 Patch847:       0003-reed_solomon-Fix-array-subscript-0-is-outside-array-.patch
 Patch848:       0001-grub-probe-Deduplicate-probed-partmap-output.patch
 Patch849:       0001-powerpc-do-CAS-in-a-more-compatible-way.patch
+Patch850:       0001-Fix-infinite-boot-loop-on-headless-system-in-qemu.patch
+Patch851:       0001-libc-config-merge-from-glibc.patch
 
 Requires:       gettext-runtime
 %if 0%{?suse_version} >= 1140
@@ -1368,6 +1370,12 @@ fi
 %endif
 
 %changelog
+* Tue May 17 2022 Michael Chang <mchang@suse.com>
+- Fix installation over serial console ends up in infinite boot loop
+  (bsc#1187810)
+  * 0001-Fix-infinite-boot-loop-on-headless-system-in-qemu.patch
+- Fix ppc64le build error for new IEEE long double ABI
+  * 0001-libc-config-merge-from-glibc.patch
 * Thu Apr 21 2022 Michael Chang <mchang@suse.com>
 - Fix Power10 LPAR error "The partition fails to activate as partition went
   into invalid state" (bsc#1198714)

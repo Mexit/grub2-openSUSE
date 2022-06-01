@@ -156,7 +156,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        29.1
+Release:        30.1
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -374,6 +374,7 @@ Patch848:       0001-grub-probe-Deduplicate-probed-partmap-output.patch
 Patch849:       0001-powerpc-do-CAS-in-a-more-compatible-way.patch
 Patch850:       0001-Fix-infinite-boot-loop-on-headless-system-in-qemu.patch
 Patch851:       0001-libc-config-merge-from-glibc.patch
+Patch852:       0001-ofdisk-improve-boot-time-by-lookup-boot-disk-first.patch
 
 Requires:       gettext-runtime
 %if 0%{?suse_version} >= 1140
@@ -644,7 +645,7 @@ CD_MODULES="all_video boot cat configfile echo true \
 PXE_MODULES="tftp http"
 CRYPTO_MODULES="luks gcry_rijndael gcry_sha1 gcry_sha256"
 %ifarch %{efi}
-CD_MODULES="${CD_MODULES} chain efifwsetup efinet"
+CD_MODULES="${CD_MODULES} chain efifwsetup efinet read"
 PXE_MODULES="${PXE_MODULES} efinet"
 %else
 CD_MODULES="${CD_MODULES} net"
@@ -1370,6 +1371,13 @@ fi
 %endif
 
 %changelog
+* Tue May 31 2022 Michael Chang <mchang@suse.com>
+- Use boot disks in OpenFirmware, fixing regression caused by
+  0001-ieee1275-implement-FCP-methods-for-WWPN-and-LUNs.patch, when
+  the root LV is completely in the boot LUN (bsc#1197948)
+  * 0001-ofdisk-improve-boot-time-by-lookup-boot-disk-first.patch
+* Thu May 26 2022 Michael Chang <mchang@suse.com>
+- Fix error message in displaying help on bootable snapshot (bsc#1199609)
 * Tue May 17 2022 Michael Chang <mchang@suse.com>
 - Fix installation over serial console ends up in infinite boot loop
   (bsc#1187810)

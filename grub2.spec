@@ -156,7 +156,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        32.1
+Release:        33.2
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -315,6 +315,7 @@ Patch789:       0001-Workaround-volatile-efi-boot-variable.patch
 Patch790:       0001-30_uefi-firmware-fix-printf-format-with-null-byte.patch
 Patch791:       0001-i386-pc-build-btrfs-zstd-support-into-separate-modul.patch
 Patch792:       0001-templates-Follow-the-path-of-usr-merged-kernel-confi.patch
+Patch793:       0001-tpm-Pass-unknown-error-as-non-fatal-but-debug-print-.patch
 Patch794:       0001-Filter-out-POSIX-locale-for-translation.patch
 Patch795:       0001-ieee1275-implement-FCP-methods-for-WWPN-and-LUNs.patch
 Patch796:       0001-disk-diskfilter-Use-nodes-in-logical-volume-s-segmen.patch
@@ -422,7 +423,6 @@ Patch897:       0013-cryptodisk-Support-key-protectors.patch
 Patch898:       0014-util-grub-protect-Add-new-tool.patch
 Patch899:       fix-tpm2-build.patch
 Patch900:       0001-crytodisk-fix-cryptodisk-module-looking-up.patch
-Patch901:       0001-tpm-Log-EFI_VOLUME_FULL-and-continue.patch
 
 Requires:       gettext-runtime
 %if 0%{?suse_version} >= 1140
@@ -1413,6 +1413,11 @@ fi
 %endif
 
 %changelog
+* Thu Aug 18 2022 Michael Chang <mchang@suse.com>
+- Fix tpm error stop tumbleweed from booting (bsc#1202374)
+  * 0001-tpm-Pass-unknown-error-as-non-fatal-but-debug-print-.patch
+- Patch Removed
+  * 0001-tpm-Log-EFI_VOLUME_FULL-and-continue.patch
 * Wed Jun  8 2022 Michael Chang <mchang@suse.com>
 - Add tpm, tpm2, luks2 and gcry_sha512 to default grub.efi (bsc#1197625)
 - Make grub-tpm.efi a symlink to grub.efi

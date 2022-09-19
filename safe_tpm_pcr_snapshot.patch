@@ -1,0 +1,90 @@
+---
+ grub-core/commands/tpm.c |   28 ++++++++++++++++++++++------
+ util/grub-install.c      |    7 +++++--
+ 2 files changed, 27 insertions(+), 8 deletions(-)
+
+--- a/grub-core/commands/tpm.c
++++ b/grub-core/commands/tpm.c
+@@ -249,6 +249,8 @@
+   return GRUB_ERR_NONE;
+ }
+ 
++#ifdef GRUB_MACHINE_EFI
++
+ static grub_err_t
+ grub_tpm_record_pcrs (grub_extcmd_context_t ctxt, int argc, char **args)
+ {
+@@ -259,6 +261,10 @@
+   grub_size_t size = 0;
+   int n, rv = 1;
+ 
++  /* To prevent error: unable to read PCR from TPM, if no TPM device available */
++  if (!grub_tpm_present())
++    return GRUB_ERR_NONE;
++
+   if (argc == 0)
+     pcr_bitmask = GRUB2_PCR_BITMASK_DEFAULT;
+   else
+@@ -287,13 +293,24 @@
+   return rv;
+ }
+ 
++#else
++
++static grub_err_t
++grub_tpm_record_pcrs (grub_extcmd_context_t ctxt __attribute__((unused)),
++    int argc __attribute__((unused)),
++    char **args __attribute__((unused)))
++{
++  return GRUB_ERR_NONE;
++}
++
++#endif
++
+ static grub_extcmd_t cmd;
+ 
+ GRUB_MOD_INIT (tpm)
+ {
+-  if (!grub_tpm_present())
+-    return;
+-  grub_verifier_register (&grub_tpm_verifier);
++  if (grub_tpm_present())
++    grub_verifier_register (&grub_tpm_verifier);
+ 
+   cmd = grub_register_extcmd ("tpm_record_pcrs", grub_tpm_record_pcrs, 0,
+ 			      N_("LIST_OF_PCRS"),
+@@ -303,8 +320,7 @@
+ 
+ GRUB_MOD_FINI (tpm)
+ {
+-  if (!grub_tpm_present())
+-    return;
+-  grub_verifier_unregister (&grub_tpm_verifier);
++  if (grub_tpm_present())
++    grub_verifier_unregister (&grub_tpm_verifier);
+   grub_unregister_extcmd (cmd);
+ }
+--- a/util/grub-install.c
++++ b/util/grub-install.c
+@@ -1457,8 +1457,10 @@
+ 
+   grub_util_unlink (load_cfg);
+ 
+-  if (1)
++  /* FIXME: It seems config.is_cryptodisk_enabled is missing here */
++  if (platform == GRUB_INSTALL_PLATFORM_X86_64_EFI)
+     {
++      grub_install_push_module ("tpm");
+       load_cfg_f = grub_util_fopen (load_cfg, "wb");
+       have_load_cfg = 1;
+       fprintf (load_cfg_f, "tpm_record_pcrs 0-9\n");
+@@ -1466,7 +1468,8 @@
+ 
+   if (debug_image && debug_image[0])
+     {
+-      load_cfg_f = grub_util_fopen (load_cfg, "wb");
++      if (!load_cfg_f)
++	load_cfg_f = grub_util_fopen (load_cfg, "wb");
+       have_load_cfg = 1;
+       fprintf (load_cfg_f, "set debug='%s'\n",
+ 	      debug_image);

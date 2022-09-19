@@ -156,7 +156,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        33.2
+Release:        34.3
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -423,6 +423,36 @@ Patch897:       0013-cryptodisk-Support-key-protectors.patch
 Patch898:       0014-util-grub-protect-Add-new-tool.patch
 Patch899:       fix-tpm2-build.patch
 Patch900:       0001-crytodisk-fix-cryptodisk-module-looking-up.patch
+# fde
+Patch901:       0001-devmapper-getroot-Have-devmapper-recognize-LUKS2.patch
+Patch902:       0002-devmapper-getroot-Set-up-cheated-LUKS2-cryptodisk-mo.patch
+Patch903:       0003-disk-cryptodisk-When-cheatmounting-use-the-sector-in.patch
+Patch904:       0004-normal-menu-Don-t-show-Booting-s-msg-when-auto-booti.patch
+Patch905:       0005-EFI-suppress-the-Welcome-to-GRUB-message-in-EFI-buil.patch
+Patch906:       0006-EFI-console-Do-not-set-colorstate-until-the-first-te.patch
+Patch907:       0007-EFI-console-Do-not-set-cursor-until-the-first-text-o.patch
+Patch908:       0008-linuxefi-Use-common-grub_initrd_load.patch
+Patch909:       0009-Add-crypttab_entry-to-obviate-the-need-to-input-pass.patch
+Patch910:       0010-templates-import-etc-crypttab-to-grub.cfg.patch
+Patch911:       grub-read-pcr.patch
+Patch912:       efi-set-variable-with-attrs.patch
+Patch913:       tpm-record-pcrs.patch
+Patch914:       tpm-protector-dont-measure-sealed-key.patch
+Patch915:       tpm-protector-export-secret-key.patch
+Patch916:       grub-install-record-pcrs.patch
+Patch917:       grub-unseal-debug.patch
+# efi mm
+Patch918:       0001-tpm-Disable-tpm-verifier-if-tpm-is-not-present.patch
+Patch919:       0001-mm-Allow-dynamically-requesting-additional-memory-re.patch
+Patch920:       0002-kern-efi-mm-Always-request-a-fixed-number-of-pages-o.patch
+Patch921:       0003-kern-efi-mm-Extract-function-to-add-memory-regions.patch
+Patch922:       0004-kern-efi-mm-Pass-up-errors-from-add_memory_regions.patch
+Patch923:       0005-kern-efi-mm-Implement-runtime-addition-of-pages.patch
+Patch924:       0001-kern-efi-mm-Enlarge-the-default-heap-size.patch
+Patch925:       0002-mm-Defer-the-disk-cache-invalidation.patch
+# powerpc-ieee1275
+Patch926:       0001-grub-install-set-point-of-no-return-for-powerpc-ieee1275.patch
+Patch927:       safe_tpm_pcr_snapshot.patch
 
 Requires:       gettext-runtime
 %if 0%{?suse_version} >= 1140
@@ -691,7 +721,7 @@ CD_MODULES="all_video boot cat configfile echo true \
 		password password_pbkdf2 png reboot search search_fs_uuid \
 		search_fs_file search_label sleep test video fat loadenv"
 PXE_MODULES="tftp http"
-CRYPTO_MODULES="luks luks2 gcry_rijndael gcry_sha1 gcry_sha256 gcry_sha512"
+CRYPTO_MODULES="luks luks2 gcry_rijndael gcry_sha1 gcry_sha256 gcry_sha512 crypttab"
 %ifarch %{efi}
 CD_MODULES="${CD_MODULES} chain efifwsetup efinet read tpm tpm2"
 PXE_MODULES="${PXE_MODULES} efinet"
@@ -1214,6 +1244,7 @@ fi
 %dir %{_sysconfdir}/grub.d
 %{_sysconfdir}/grub.d/README
 %config(noreplace) %{_sysconfdir}/grub.d/00_header
+%config(noreplace) %{_sysconfdir}/grub.d/05_crypttab
 %config(noreplace) %{_sysconfdir}/grub.d/10_linux
 %config(noreplace) %{_sysconfdir}/grub.d/20_linux_xen
 %config(noreplace) %{_sysconfdir}/grub.d/30_uefi-firmware
@@ -1413,6 +1444,47 @@ fi
 %endif
 
 %changelog
+* Mon Sep 19 2022 Michael Chang <mchang@suse.com>
+- Add safety measure to pcr snapshot by checking platform and tpm status
+  * safe_tpm_pcr_snapshot.patch
+* Fri Sep 16 2022 Michael Chang <mchang@suse.com>
+- Fix installation failure due to unavailable nvram device on
+  ppc64le (bsc#1201361)
+  * 0001-grub-install-set-point-of-no-return-for-powerpc-ieee1275.patch
+* Fri Sep 16 2022 Gary Ching-Pang Lin <glin@suse.com>
+- Add patches to dynamically allocate additional memory regions for
+  EFI systems (bsc#1202438)
+  * 0001-mm-Allow-dynamically-requesting-additional-memory-re.patch
+  * 0002-kern-efi-mm-Always-request-a-fixed-number-of-pages-o.patch
+  * 0003-kern-efi-mm-Extract-function-to-add-memory-regions.patch
+  * 0004-kern-efi-mm-Pass-up-errors-from-add_memory_regions.patch
+  * 0005-kern-efi-mm-Implement-runtime-addition-of-pages.patch
+- Enlarge the default heap size and defer the disk cache
+  invalidation (bsc#1202438)
+  * 0001-kern-efi-mm-Enlarge-the-default-heap-size.patch
+  * 0002-mm-Defer-the-disk-cache-invalidation.patch
+* Thu Sep 15 2022 Michael Chang <mchang@suse.com>
+- Add patches for ALP FDE support
+  * 0001-devmapper-getroot-Have-devmapper-recognize-LUKS2.patch
+  * 0002-devmapper-getroot-Set-up-cheated-LUKS2-cryptodisk-mo.patch
+  * 0003-disk-cryptodisk-When-cheatmounting-use-the-sector-in.patch
+  * 0004-normal-menu-Don-t-show-Booting-s-msg-when-auto-booti.patch
+  * 0005-EFI-suppress-the-Welcome-to-GRUB-message-in-EFI-buil.patch
+  * 0006-EFI-console-Do-not-set-colorstate-until-the-first-te.patch
+  * 0007-EFI-console-Do-not-set-cursor-until-the-first-text-o.patch
+  * 0008-linuxefi-Use-common-grub_initrd_load.patch
+  * 0009-Add-crypttab_entry-to-obviate-the-need-to-input-pass.patch
+  * 0010-templates-import-etc-crypttab-to-grub.cfg.patch
+  * grub-read-pcr.patch
+  * efi-set-variable-with-attrs.patch
+  * tpm-record-pcrs.patch
+  * tpm-protector-dont-measure-sealed-key.patch
+  * tpm-protector-export-secret-key.patch
+  * grub-install-record-pcrs.patch
+  * grub-unseal-debug.patch
+* Mon Aug 29 2022 Michael Chang <mchang@suse.com>
+- Fix out of memory error cannot be prevented via disabling tpm (bsc#1202438)
+  * 0001-tpm-Disable-tpm-verifier-if-tpm-is-not-present.patch
 * Thu Aug 18 2022 Michael Chang <mchang@suse.com>
 - Fix tpm error stop tumbleweed from booting (bsc#1202374)
   * 0001-tpm-Pass-unknown-error-as-non-fatal-but-debug-print-.patch

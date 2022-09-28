@@ -156,7 +156,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        34.3
+Release:        35.2
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -453,6 +453,7 @@ Patch925:       0002-mm-Defer-the-disk-cache-invalidation.patch
 # powerpc-ieee1275
 Patch926:       0001-grub-install-set-point-of-no-return-for-powerpc-ieee1275.patch
 Patch927:       safe_tpm_pcr_snapshot.patch
+Patch928:       0001-linux-fix-efi_relocate_kernel-failure.patch
 
 Requires:       gettext-runtime
 %if 0%{?suse_version} >= 1140
@@ -1444,6 +1445,9 @@ fi
 %endif
 
 %changelog
+* Fri Sep 23 2022 Michael Chang <mchang@suse.com>
+- Add patch to fix kernel relocation error in low memory
+  * 0001-linux-fix-efi_relocate_kernel-failure.patch
 * Mon Sep 19 2022 Michael Chang <mchang@suse.com>
 - Add safety measure to pcr snapshot by checking platform and tpm status
   * safe_tpm_pcr_snapshot.patch

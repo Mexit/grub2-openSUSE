@@ -1,7 +1,7 @@
 ---
  grub-core/commands/tpm.c |   28 ++++++++++++++++++++++------
- util/grub-install.c      |    7 +++++--
- 2 files changed, 27 insertions(+), 8 deletions(-)
+ util/grub-install.c      |    6 ++++--
+ 2 files changed, 26 insertions(+), 8 deletions(-)
 
 --- a/grub-core/commands/tpm.c
 +++ b/grub-core/commands/tpm.c
@@ -66,19 +66,18 @@
  }
 --- a/util/grub-install.c
 +++ b/util/grub-install.c
-@@ -1457,8 +1457,10 @@
+@@ -1457,8 +1457,9 @@
  
    grub_util_unlink (load_cfg);
  
 -  if (1)
-+  /* FIXME: It seems config.is_cryptodisk_enabled is missing here */
-+  if (platform == GRUB_INSTALL_PLATFORM_X86_64_EFI)
++  if (platform == GRUB_INSTALL_PLATFORM_X86_64_EFI && have_cryptodisk)
      {
 +      grub_install_push_module ("tpm");
        load_cfg_f = grub_util_fopen (load_cfg, "wb");
        have_load_cfg = 1;
        fprintf (load_cfg_f, "tpm_record_pcrs 0-9\n");
-@@ -1466,7 +1468,8 @@
+@@ -1466,7 +1467,8 @@
  
    if (debug_image && debug_image[0])
      {

@@ -21,19 +21,17 @@ can also be used multiple times to specify encrypted volumes unlocked by
 
 Signed-off-by: Michael Chang <mchang@suse.com>
 ---
- grub-core/Makefile.core.def   |   5 ++
- grub-core/commands/crypttab.c |  42 ++++++++++++
- grub-core/disk/cryptodisk.c   |   5 ++
- grub-core/loader/linux.c      | 126 ++++++++++++++++++++++++++++++++--
- include/grub/linux.h          |   3 +
- 5 files changed, 177 insertions(+), 4 deletions(-)
+ grub-core/Makefile.core.def   |    5 +
+ grub-core/commands/crypttab.c |   42 ++++++++++++
+ grub-core/disk/cryptodisk.c   |    6 +
+ grub-core/loader/linux.c      |  137 ++++++++++++++++++++++++++++++++++++++++--
+ include/grub/linux.h          |    3 
+ 5 files changed, 188 insertions(+), 5 deletions(-)
  create mode 100644 grub-core/commands/crypttab.c
 
-Index: grub-2.06/grub-core/Makefile.core.def
-===================================================================
---- grub-2.06.orig/grub-core/Makefile.core.def
-+++ grub-2.06/grub-core/Makefile.core.def
-@@ -2643,3 +2643,8 @@ module = {
+--- a/grub-core/Makefile.core.def
++++ b/grub-core/Makefile.core.def
+@@ -2643,3 +2643,8 @@
    cflags = '$(CFLAGS_POSIX) $(CFLAGS_GNULIB)';
    cppflags = '$(CPPFLAGS_POSIX) $(CPPFLAGS_GNULIB)';
  };
@@ -42,10 +40,8 @@ Index: grub-2.06/grub-core/Makefile.core.def
 +  name = crypttab;
 +  common = commands/crypttab.c;
 +};
-Index: grub-2.06/grub-core/commands/crypttab.c
-===================================================================
 --- /dev/null
-+++ grub-2.06/grub-core/commands/crypttab.c
++++ b/grub-core/commands/crypttab.c
 @@ -0,0 +1,42 @@
 +
 +#include <grub/dl.h>
@@ -89,10 +85,8 @@ Index: grub-2.06/grub-core/commands/crypttab.c
 +{
 +  grub_unregister_command (cmd);
 +}
-Index: grub-2.06/grub-core/disk/cryptodisk.c
-===================================================================
---- grub-2.06.orig/grub-core/disk/cryptodisk.c
-+++ grub-2.06/grub-core/disk/cryptodisk.c
+--- a/grub-core/disk/cryptodisk.c
++++ b/grub-core/disk/cryptodisk.c
 @@ -30,6 +30,8 @@
  
  #ifdef GRUB_UTIL
@@ -102,21 +96,19 @@ Index: grub-2.06/grub-core/disk/cryptodisk.c
  #endif
  
  GRUB_MOD_LICENSE ("GPLv3+");
-@@ -1146,6 +1148,10 @@ grub_cryptodisk_scan_device_real (const
+@@ -1146,6 +1148,10 @@
    dev = NULL;
  
   cleanup:
 +#ifndef GRUB_UTIL
-+  if (cargs->key_data)
++  if (cargs->key_data && dev)
 +    grub_initrd_publish_key (dev->uuid, (const char *)cargs->key_data, cargs->key_len, NULL);
 +#endif
    if (askpass)
      {
        cargs->key_len = 0;
-Index: grub-2.06/grub-core/loader/linux.c
-===================================================================
---- grub-2.06.orig/grub-core/loader/linux.c
-+++ grub-2.06/grub-core/loader/linux.c
+--- a/grub-core/loader/linux.c
++++ b/grub-core/loader/linux.c
 @@ -5,6 +5,7 @@
  #include <grub/file.h>
  #include <grub/mm.h>
@@ -125,7 +117,7 @@ Index: grub-2.06/grub-core/loader/linux.c
  
  struct newc_head
  {
-@@ -27,6 +28,7 @@ struct newc_head
+@@ -27,6 +28,7 @@
  struct grub_linux_initrd_component
  {
    grub_file_t file;
@@ -133,7 +125,7 @@ Index: grub-2.06/grub-core/loader/linux.c
    char *newc_name;
    grub_off_t size;
  };
-@@ -38,6 +40,18 @@ struct dir
+@@ -38,6 +40,18 @@
    struct dir *child;
  };
  
@@ -152,7 +144,7 @@ Index: grub-2.06/grub-core/loader/linux.c
  static char
  hex (grub_uint8_t val)
  {
-@@ -149,6 +163,65 @@ insert_dir (const char *name, struct dir
+@@ -149,6 +163,65 @@
    return GRUB_ERR_NONE;
  }
  
@@ -218,7 +210,7 @@ Index: grub-2.06/grub-core/loader/linux.c
  grub_err_t
  grub_initrd_init (int argc, char *argv[],
  		  struct grub_linux_initrd_context *initrd_ctx)
-@@ -156,11 +229,17 @@ grub_initrd_init (int argc, char *argv[]
+@@ -156,11 +229,17 @@
    int i;
    int newc = 0;
    struct dir *root = 0;
@@ -237,7 +229,7 @@ Index: grub-2.06/grub-core/loader/linux.c
    if (!initrd_ctx->components)
      return grub_errno;
  
-@@ -239,7 +318,10 @@ grub_initrd_init (int argc, char *argv[]
+@@ -239,7 +318,10 @@
        free_dir (root);
        root = 0;
      }
@@ -249,7 +241,7 @@ Index: grub-2.06/grub-core/loader/linux.c
    return GRUB_ERR_NONE;
  
   overflow:
-@@ -263,7 +345,9 @@ grub_initrd_close (struct grub_linux_ini
+@@ -263,7 +345,9 @@
    for (i = 0; i < initrd_ctx->nfiles; i++)
      {
        grub_free (initrd_ctx->components[i].newc_name);
@@ -260,7 +252,7 @@ Index: grub-2.06/grub-core/loader/linux.c
      }
    grub_free (initrd_ctx->components);
    initrd_ctx->components = 0;
-@@ -297,7 +381,7 @@ grub_initrd_load (struct grub_linux_init
+@@ -297,7 +381,7 @@
  	    }
  	  ptr += dir_size;
  	  ptr = make_header (ptr, initrd_ctx->components[i].newc_name,
@@ -269,7 +261,7 @@ Index: grub-2.06/grub-core/loader/linux.c
  			     0100777,
  			     initrd_ctx->components[i].size);
  	  newc = 1;
-@@ -312,7 +396,12 @@ grub_initrd_load (struct grub_linux_init
+@@ -312,7 +396,12 @@
  	}
  
        cursize = initrd_ctx->components[i].size;
@@ -283,7 +275,7 @@ Index: grub-2.06/grub-core/loader/linux.c
  	  != cursize)
  	{
  	  if (!grub_errno)
-@@ -333,3 +422,41 @@ grub_initrd_load (struct grub_linux_init
+@@ -333,3 +422,41 @@
    root = 0;
    return GRUB_ERR_NONE;
  }
@@ -325,11 +317,9 @@ Index: grub-2.06/grub-core/loader/linux.c
 +
 +  return GRUB_ERR_NONE;
 +}
-Index: grub-2.06/include/grub/linux.h
-===================================================================
---- grub-2.06.orig/include/grub/linux.h
-+++ grub-2.06/include/grub/linux.h
-@@ -22,3 +22,6 @@ grub_initrd_close (struct grub_linux_ini
+--- a/include/grub/linux.h
++++ b/include/grub/linux.h
+@@ -22,3 +22,6 @@
  grub_err_t
  grub_initrd_load (struct grub_linux_initrd_context *initrd_ctx,
  		  char *argv[], void *target);

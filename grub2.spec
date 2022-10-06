@@ -156,7 +156,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        36.3
+Release:        37.1
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -1445,6 +1445,9 @@ fi
 %endif
 
 %changelog
+* Thu Oct  6 2022 Michael Chang <mchang@suse.com>
+- Fix firmware oops after disk decrypting failure (bsc#1204037)
+  * 0009-Add-crypttab_entry-to-obviate-the-need-to-input-pass.patch
 * Fri Sep 23 2022 Michael Chang <mchang@suse.com>
 - Add patch to fix kernel relocation error in low memory
   * 0001-linux-fix-efi_relocate_kernel-failure.patch

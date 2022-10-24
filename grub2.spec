@@ -156,7 +156,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        37.1
+Release:        38.1
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -720,7 +720,7 @@ CD_MODULES="all_video boot cat configfile echo true \
 		font gfxmenu gfxterm gzio halt iso9660 \
 		jpeg minicmd normal part_apple part_msdos part_gpt \
 		password password_pbkdf2 png reboot search search_fs_uuid \
-		search_fs_file search_label sleep test video fat loadenv"
+		search_fs_file search_label sleep test video fat loadenv loopback"
 PXE_MODULES="tftp http"
 CRYPTO_MODULES="luks luks2 gcry_rijndael gcry_sha1 gcry_sha256 gcry_sha512 crypttab"
 %ifarch %{efi}
@@ -1445,6 +1445,8 @@ fi
 %endif
 
 %changelog
+* Mon Oct 24 2022 Michael Chang <mchang@suse.com>
+- Include loopback into signed grub2 image (jsc#PED-2150)
 * Thu Oct  6 2022 Michael Chang <mchang@suse.com>
 - Fix firmware oops after disk decrypting failure (bsc#1204037)
   * 0009-Add-crypttab_entry-to-obviate-the-need-to-input-pass.patch

@@ -156,7 +156,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        38.1
+Release:        39.1
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -454,6 +454,18 @@ Patch925:       0002-mm-Defer-the-disk-cache-invalidation.patch
 Patch926:       0001-grub-install-set-point-of-no-return-for-powerpc-ieee1275.patch
 Patch927:       safe_tpm_pcr_snapshot.patch
 Patch928:       0001-linux-fix-efi_relocate_kernel-failure.patch
+# (PED-996) NVMeoFC support on Grub (grub2)
+Patch929:       0001-ieee1275-add-support-for-NVMeoFC.patch
+Patch930:       0002-ieee1275-ofpath-enable-NVMeoF-logical-device-transla.patch
+Patch931:       0003-ieee1275-change-the-logic-of-ieee1275_get_devargs.patch
+Patch932:       0004-ofpath-controller-name-update.patch
+# (PED-1265) TDX: Enhance grub2 measurement to TD RTMR
+Patch933:       0001-commands-efi-tpm-Refine-the-status-of-log-event.patch
+Patch934:       0002-commands-efi-tpm-Use-grub_strcpy-instead-of-grub_mem.patch
+Patch935:       0003-efi-tpm-Add-EFI_CC_MEASUREMENT_PROTOCOL-support.patch
+# (PED-1990) GRUB2: Measure the kernel on POWER10 and extend TPM PCRs
+Patch936:       0001-ibmvtpm-Add-support-for-trusted-boot-using-a-vTPM-2..patch
+Patch937:       0002-ieee1275-implement-vec5-for-cas-negotiation.patch
 
 Requires:       gettext-runtime
 %if 0%{?suse_version} >= 1140
@@ -1445,6 +1457,22 @@ fi
 %endif
 
 %changelog
+* Fri Oct 28 2022 Michael Chang <mchang@suse.com>
+- NVMeoFC support on grub (jsc#PED-996)
+  * 0001-ieee1275-add-support-for-NVMeoFC.patch
+  * 0002-ieee1275-ofpath-enable-NVMeoF-logical-device-transla.patch
+  * 0003-ieee1275-change-the-logic-of-ieee1275_get_devargs.patch
+  * 0004-ofpath-controller-name-update.patch
+- TDX: Enhance grub2 measurement to TD RTMR (jsc#PED-1265)
+  * 0001-commands-efi-tpm-Refine-the-status-of-log-event.patch
+  * 0002-commands-efi-tpm-Use-grub_strcpy-instead-of-grub_mem.patch
+  * 0003-efi-tpm-Add-EFI_CC_MEASUREMENT_PROTOCOL-support.patch
+- Measure the kernel on POWER10 and extend TPM PCRs (PED-1990)
+  * 0001-ibmvtpm-Add-support-for-trusted-boot-using-a-vTPM-2..patch
+  * 0002-ieee1275-implement-vec5-for-cas-negotiation.patch
+- Fix efi pcr snapshot related funtion is defined but not used on powerpc
+  platform.
+  * safe_tpm_pcr_snapshot.patch
 * Mon Oct 24 2022 Michael Chang <mchang@suse.com>
 - Include loopback into signed grub2 image (jsc#PED-2150)
 * Thu Oct  6 2022 Michael Chang <mchang@suse.com>

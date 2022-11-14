@@ -156,7 +156,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        39.1
+Release:        40.1
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -453,7 +453,6 @@ Patch925:       0002-mm-Defer-the-disk-cache-invalidation.patch
 # powerpc-ieee1275
 Patch926:       0001-grub-install-set-point-of-no-return-for-powerpc-ieee1275.patch
 Patch927:       safe_tpm_pcr_snapshot.patch
-Patch928:       0001-linux-fix-efi_relocate_kernel-failure.patch
 # (PED-996) NVMeoFC support on Grub (grub2)
 Patch929:       0001-ieee1275-add-support-for-NVMeoFC.patch
 Patch930:       0002-ieee1275-ofpath-enable-NVMeoF-logical-device-transla.patch
@@ -1457,6 +1456,12 @@ fi
 %endif
 
 %changelog
+* Mon Nov 14 2022 Michael Chang <mchang@suse.com>
+- Removed 0001-linux-fix-efi_relocate_kernel-failure.patch as reported
+  regression in some hardware being stuck in initrd loading (bsc#1205380)
+* Mon Nov 14 2022 Michael Chang <mchang@suse.com>
+- Fix password asked twice if third field in crypttab not present (bsc#1205312)
+  * 0009-Add-crypttab_entry-to-obviate-the-need-to-input-pass.patch
 * Fri Oct 28 2022 Michael Chang <mchang@suse.com>
 - NVMeoFC support on grub (jsc#PED-996)
   * 0001-ieee1275-add-support-for-NVMeoFC.patch

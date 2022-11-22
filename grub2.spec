@@ -156,7 +156,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        41.2
+Release:        42.1
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -1468,6 +1468,10 @@ fi
 %endif
 
 %changelog
+* Mon Nov 21 2022 Michael Chang <mchang@suse.com>
+- Fix regression of reverting back to asking password twice when a keyfile is
+  already used (bsc#1205309)
+  * 0010-templates-import-etc-crypttab-to-grub.cfg.patch
 * Wed Nov 16 2022 Michael Chang <mchang@suse.com>
 - Security fixes and hardenings
   * 0001-font-Reject-glyphs-exceeds-font-max_glyph_width-or-f.patch

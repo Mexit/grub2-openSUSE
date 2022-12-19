@@ -156,7 +156,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        46.1
+Release:        47.1
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -479,6 +479,7 @@ Patch949:       0012-normal-charset-Fix-an-integer-overflow-in-grub_unico.patch
 Patch950:       0001-fs-btrfs-Use-full-btrfs-bootloader-area.patch
 Patch951:       0002-Mark-environmet-blocks-as-used-for-image-embedding.patch
 Patch952:       0001-ieee1275-Increase-initially-allocated-heap-from-1-4-.patch
+Patch953:       grub2-increase-crypttab-path-buffer.patch
 
 Requires:       gettext-runtime
 %if 0%{?suse_version} >= 1140
@@ -1470,6 +1471,10 @@ fi
 %endif
 
 %changelog
+* Fri Dec 16 2022 Gary Ching-Pang Lin <glin@suse.com>
+- Increase the path buffer in the crypttab command for the long
+  volume name (bsc#1206333)
+  * grub2-increase-crypttab-path-buffer.patch
 * Mon Dec  5 2022 Michael Chang <mchang@suse.com>
 - Add tpm to signed grub.elf image (PED-1990) (bsc#1205912)
 - Increase initial heap size from 1/4 to 1/3

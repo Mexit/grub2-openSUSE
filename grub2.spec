@@ -156,7 +156,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        47.1
+Release:        48.1
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -480,6 +480,7 @@ Patch950:       0001-fs-btrfs-Use-full-btrfs-bootloader-area.patch
 Patch951:       0002-Mark-environmet-blocks-as-used-for-image-embedding.patch
 Patch952:       0001-ieee1275-Increase-initially-allocated-heap-from-1-4-.patch
 Patch953:       grub2-increase-crypttab-path-buffer.patch
+Patch954:       0001-grub2-Set-multiple-device-path-for-a-nvmf-boot-devic.patch
 
 Requires:       gettext-runtime
 %if 0%{?suse_version} >= 1140
@@ -1471,6 +1472,9 @@ fi
 %endif
 
 %changelog
+* Mon Dec 19 2022 Michael Chang <mchang@suse.com>
+- Setup multiple device paths for a nvmf boot device (bsc#1205666)
+  * 0001-grub2-Set-multiple-device-path-for-a-nvmf-boot-devic.patch
 * Fri Dec 16 2022 Gary Ching-Pang Lin <glin@suse.com>
 - Increase the path buffer in the crypttab command for the long
   volume name (bsc#1206333)

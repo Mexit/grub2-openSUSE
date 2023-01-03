@@ -156,7 +156,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        48.1
+Release:        49.1
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -193,11 +193,8 @@ Patch15:        not-display-menu-when-boot-once.patch
 Patch17:        grub2-pass-corret-root-for-nfsroot.patch
 Patch19:        grub2-efi-HP-workaround.patch
 Patch21:        grub2-secureboot-add-linuxefi.patch
-Patch22:        grub2-secureboot-use-linuxefi-on-uefi.patch
 Patch23:        grub2-secureboot-no-insmod-on-sb.patch
-Patch24:        grub2-secureboot-provide-linuxefi-config.patch
 Patch25:        grub2-secureboot-chainloader.patch
-Patch26:        grub2-secureboot-use-linuxefi-on-uefi-in-os-prober.patch
 Patch27:        grub2-linuxefi-fix-boot-params.patch
 Patch35:        grub2-linguas.sh-no-rsync.patch
 Patch37:        grub2-use-Unifont-for-starfield-theme-terminal.patch
@@ -1472,6 +1469,20 @@ fi
 %endif
 
 %changelog
+* Fri Dec 30 2022 Michael Chang <mchang@suse.com>
+- Fix inappropriately including commented lines in crypttab (bsc#1206279)
+  * 0010-templates-import-etc-crypttab-to-grub.cfg.patch
+* Fri Dec 23 2022 Michael Chang <mchang@suse.com>
+- Make grub.cfg invariant to efi and legacy platforms (bsc#1205200)
+- Removed patch linuxefi
+  * grub2-secureboot-provide-linuxefi-config.patch
+  * grub2-secureboot-use-linuxefi-on-uefi-in-os-prober.patch
+  * grub2-secureboot-use-linuxefi-on-uefi.patch
+- Rediff
+  * grub2-btrfs-05-grub2-mkconfig.patch
+  * grub2-efi-xen-cmdline.patch
+  * grub2-s390x-05-grub2-mkconfig.patch
+  * grub2-suse-remove-linux-root-param.patch
 * Mon Dec 19 2022 Michael Chang <mchang@suse.com>
 - Setup multiple device paths for a nvmf boot device (bsc#1205666)
   * 0001-grub2-Set-multiple-device-path-for-a-nvmf-boot-devic.patch

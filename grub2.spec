@@ -156,7 +156,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        51.2
+Release:        52.1
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -479,6 +479,7 @@ Patch952:       0001-ieee1275-Increase-initially-allocated-heap-from-1-4-.patch
 Patch953:       grub2-increase-crypttab-path-buffer.patch
 Patch954:       0001-grub2-Set-multiple-device-path-for-a-nvmf-boot-devic.patch
 Patch955:       0001-grub-core-modify-sector-by-sysfs-as-disk-sector.patch
+Patch956:       0001-grub2-Can-t-setup-a-default-boot-device-correctly-on.patch
 
 Requires:       gettext-runtime
 %if 0%{?suse_version} >= 1140
@@ -1535,6 +1536,9 @@ fi
 %endif
 
 %changelog
+* Wed Feb  8 2023 Michael Chang <mchang@suse.com>
+- Fix nvmf boot device setup (bsc#1207811)
+  * 0001-grub2-Can-t-setup-a-default-boot-device-correctly-on.patch
 * Tue Feb  7 2023 Michael Chang <mchang@suse.com>
 - Fix unknown filesystem error on disks with 4096 sector size (bsc#1207064)
   * 0001-grub-core-modify-sector-by-sysfs-as-disk-sector.patch

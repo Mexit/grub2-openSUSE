@@ -156,7 +156,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        52.1
+Release:        53.2
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -480,6 +480,19 @@ Patch953:       grub2-increase-crypttab-path-buffer.patch
 Patch954:       0001-grub2-Set-multiple-device-path-for-a-nvmf-boot-devic.patch
 Patch955:       0001-grub-core-modify-sector-by-sysfs-as-disk-sector.patch
 Patch956:       0001-grub2-Can-t-setup-a-default-boot-device-correctly-on.patch
+Patch957:       0001-tpm2-adjust-the-input-parameters-of-TPM2_EvictContro.patch
+Patch958:       0002-tpm2-declare-the-input-arguments-of-TPM2-functions-a.patch
+Patch959:       0003-tpm2-resend-the-command-on-TPM_RC_RETRY.patch
+Patch960:       0004-tpm2-add-new-TPM2-types-structures-and-command-const.patch
+Patch961:       0005-tpm2-add-more-marshal-unmarshal-functions.patch
+Patch962:       0006-tpm2-check-the-command-parameters-of-TPM2-commands.patch
+Patch963:       0007-tpm2-pack-the-missing-authorization-command-for-TPM2.patch
+Patch964:       0008-tpm2-allow-some-command-parameters-to-be-NULL.patch
+Patch965:       0009-tpm2-remove-the-unnecessary-variables.patch
+Patch966:       0010-tpm2-add-TPM2-commands-to-support-authorized-policy.patch
+Patch967:       0011-tpm2-make-the-file-reading-unmarshal-functions-gener.patch
+Patch968:       0012-tpm2-initialize-the-PCR-selection-list-early.patch
+Patch969:       0013-tpm2-support-unsealing-key-with-authorized-policy.patch
 
 Requires:       gettext-runtime
 %if 0%{?suse_version} >= 1140
@@ -1536,6 +1549,22 @@ fi
 %endif
 
 %changelog
+* Thu Feb  9 2023 Gary Ching-Pang Lin <glin@suse.com>
+- Amend the TPM2 stack and add authorized policy mode to
+  tpm2_key_protector
+  * 0001-tpm2-adjust-the-input-parameters-of-TPM2_EvictContro.patch
+  * 0002-tpm2-declare-the-input-arguments-of-TPM2-functions-a.patch
+  * 0003-tpm2-resend-the-command-on-TPM_RC_RETRY.patch
+  * 0004-tpm2-add-new-TPM2-types-structures-and-command-const.patch
+  * 0005-tpm2-add-more-marshal-unmarshal-functions.patch
+  * 0006-tpm2-check-the-command-parameters-of-TPM2-commands.patch
+  * 0007-tpm2-pack-the-missing-authorization-command-for-TPM2.patch
+  * 0008-tpm2-allow-some-command-parameters-to-be-NULL.patch
+  * 0009-tpm2-remove-the-unnecessary-variables.patch
+  * 0010-tpm2-add-TPM2-commands-to-support-authorized-policy.patch
+  * 0011-tpm2-make-the-file-reading-unmarshal-functions-gener.patch
+  * 0012-tpm2-initialize-the-PCR-selection-list-early.patch
+  * 0013-tpm2-support-unsealing-key-with-authorized-policy.patch
 * Wed Feb  8 2023 Michael Chang <mchang@suse.com>
 - Fix nvmf boot device setup (bsc#1207811)
   * 0001-grub2-Can-t-setup-a-default-boot-device-correctly-on.patch

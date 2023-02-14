@@ -156,7 +156,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        53.2
+Release:        54.2
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -493,6 +493,8 @@ Patch966:       0010-tpm2-add-TPM2-commands-to-support-authorized-policy.patch
 Patch967:       0011-tpm2-make-the-file-reading-unmarshal-functions-gener.patch
 Patch968:       0012-tpm2-initialize-the-PCR-selection-list-early.patch
 Patch969:       0013-tpm2-support-unsealing-key-with-authorized-policy.patch
+# Set efi variables LoaderDevicePartUUID & LoaderInfo (needed for UKI)
+Patch970:       grub2-add-module-for-boot-loader-interface.patch
 
 Requires:       gettext-runtime
 %if 0%{?suse_version} >= 1140
@@ -1549,6 +1551,10 @@ fi
 %endif
 
 %changelog
+* Fri Feb 10 2023 Valentin Lefebvre <valentin.lefebvre@suse.com>
+- Add module for boot loader interface. Needed for load Unified Kernel
+  Image (UKI)
+  * grub2-add-module-for-boot-loader-interface.patch
 * Thu Feb  9 2023 Gary Ching-Pang Lin <glin@suse.com>
 - Amend the TPM2 stack and add authorized policy mode to
   tpm2_key_protector

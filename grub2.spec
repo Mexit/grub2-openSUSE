@@ -156,7 +156,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        54.2
+Release:        55.1
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -1551,6 +1551,9 @@ fi
 %endif
 
 %changelog
+* Wed Feb 15 2023 Gary Ching-Pang Lin <glin@suse.com>
+- Refresh 0003-tpm2-resend-the-command-on-TPM_RC_RETRY.patch to
+  handle the TPM2 responseCode correctly.
 * Fri Feb 10 2023 Valentin Lefebvre <valentin.lefebvre@suse.com>
 - Add module for boot loader interface. Needed for load Unified Kernel
   Image (UKI)

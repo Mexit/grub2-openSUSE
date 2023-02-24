@@ -156,7 +156,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        55.1
+Release:        56.1
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -438,7 +438,6 @@ Patch915:       tpm-protector-export-secret-key.patch
 Patch916:       grub-install-record-pcrs.patch
 Patch917:       grub-unseal-debug.patch
 # efi mm
-Patch918:       0001-tpm-Disable-tpm-verifier-if-tpm-is-not-present.patch
 Patch919:       0001-mm-Allow-dynamically-requesting-additional-memory-re.patch
 Patch920:       0002-kern-efi-mm-Always-request-a-fixed-number-of-pages-o.patch
 Patch921:       0003-kern-efi-mm-Extract-function-to-add-memory-regions.patch
@@ -495,6 +494,9 @@ Patch968:       0012-tpm2-initialize-the-PCR-selection-list-early.patch
 Patch969:       0013-tpm2-support-unsealing-key-with-authorized-policy.patch
 # Set efi variables LoaderDevicePartUUID & LoaderInfo (needed for UKI)
 Patch970:       grub2-add-module-for-boot-loader-interface.patch
+# Fix out of memory error on lpar installation from virtual cdrom (bsc#1208024)
+Patch971:       0001-ieee1275-Further-increase-initially-allocated-heap-f.patch
+Patch972:       0002-tpm-Disable-tpm-verifier-if-tpm-is-not-present.patch
 
 Requires:       gettext-runtime
 %if 0%{?suse_version} >= 1140
@@ -1551,6 +1553,16 @@ fi
 %endif
 
 %changelog
+* Wed Feb 22 2023 Michael Chang <mchang@suse.com>
+- Fix out of memory error on lpar installation from virtual cdrom (bsc#1208024)
+  * 0001-ieee1275-Further-increase-initially-allocated-heap-f.patch
+  * 0002-tpm-Disable-tpm-verifier-if-tpm-is-not-present.patch
+- Fix lpar got hung at grub after inactive migration (bsc#1207684)
+  * 0002-ieee1275-implement-vec5-for-cas-negotiation.patch
+- Rediff
+  * safe_tpm_pcr_snapshot.patch
+- Patch supersceded
+  * 0001-tpm-Disable-tpm-verifier-if-tpm-is-not-present.patch
 * Wed Feb 15 2023 Gary Ching-Pang Lin <glin@suse.com>
 - Refresh 0003-tpm2-resend-the-command-on-TPM_RC_RETRY.patch to
   handle the TPM2 responseCode correctly.

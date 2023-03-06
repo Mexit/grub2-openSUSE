@@ -156,7 +156,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        56.1
+Release:        57.3
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -497,6 +497,7 @@ Patch970:       grub2-add-module-for-boot-loader-interface.patch
 # Fix out of memory error on lpar installation from virtual cdrom (bsc#1208024)
 Patch971:       0001-ieee1275-Further-increase-initially-allocated-heap-f.patch
 Patch972:       0002-tpm-Disable-tpm-verifier-if-tpm-is-not-present.patch
+Patch973:       0001-RISC-V-Handle-R_RISCV_CALL_PLT-reloc.patch
 
 Requires:       gettext-runtime
 %if 0%{?suse_version} >= 1140
@@ -1553,6 +1554,9 @@ fi
 %endif
 
 %changelog
+* Wed Mar  1 2023 Michael Chang <mchang@suse.com>
+- Fix riscv64 error for relocation 0x13 is not implemented yet
+  * 0001-RISC-V-Handle-R_RISCV_CALL_PLT-reloc.patch
 * Wed Feb 22 2023 Michael Chang <mchang@suse.com>
 - Fix out of memory error on lpar installation from virtual cdrom (bsc#1208024)
   * 0001-ieee1275-Further-increase-initially-allocated-heap-f.patch

@@ -156,7 +156,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        57.3
+Release:        58.5
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -498,6 +498,10 @@ Patch970:       grub2-add-module-for-boot-loader-interface.patch
 Patch971:       0001-ieee1275-Further-increase-initially-allocated-heap-f.patch
 Patch972:       0002-tpm-Disable-tpm-verifier-if-tpm-is-not-present.patch
 Patch973:       0001-RISC-V-Handle-R_RISCV_CALL_PLT-reloc.patch
+Patch974:       0001-clean-up-crypttab-and-linux-modules-dependency.patch
+Patch975:       0002-discard-cached-key-before-entering-grub-shell-and-ed.patch
+# Make grub more robust against storage race condition causing system boot failures (bsc#1189036)
+Patch976:       0001-ieee1275-ofdisk-retry-on-open-and-read-failure.patch
 
 Requires:       gettext-runtime
 %if 0%{?suse_version} >= 1140
@@ -1554,6 +1558,14 @@ fi
 %endif
 
 %changelog
+* Mon Mar  6 2023 Michael Chang <mchang@suse.com>
+- Discard cached key from grub shell and editor mode
+  * 0001-clean-up-crypttab-and-linux-modules-dependency.patch
+  * 0002-discard-cached-key-before-entering-grub-shell-and-ed.patch
+* Fri Mar  3 2023 Michael Chang <mchang@suse.com>
+- Make grub more robust against storage race condition causing system boot
+  failures (bsc#1189036)
+  * 0001-ieee1275-ofdisk-retry-on-open-and-read-failure.patch
 * Wed Mar  1 2023 Michael Chang <mchang@suse.com>
 - Fix riscv64 error for relocation 0x13 is not implemented yet
   * 0001-RISC-V-Handle-R_RISCV_CALL_PLT-reloc.patch

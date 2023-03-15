@@ -156,7 +156,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        58.5
+Release:        59.1
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -282,6 +282,7 @@ Patch421:       0002-AUDIT-0-http-boot-tracker-bug.patch
 Patch430:       grub2-mkconfig-default-entry-correction.patch
 Patch431:       grub2-s390x-10-keep-network-at-kexec.patch
 Patch432:       grub2-s390x-11-secureboot.patch
+Patch433:       grub2-s390x-12-zipl-setup-usrmerge.patch
 # Support for UEFI Secure Boot on AArch64 (FATE#326541)
 Patch450:       grub2-secureboot-install-signed-grub.patch
 Patch501:       grub2-btrfs-help-on-snapper-rollback.patch
@@ -1558,6 +1559,9 @@ fi
 %endif
 
 %changelog
+* Mon Mar 13 2023 rw@suse.com
+- Tolerate kernel moved out of /boot. (bsc#1184804)
+  * grub2-s390x-12-zipl-setup-usrmerge.patch
 * Mon Mar  6 2023 Michael Chang <mchang@suse.com>
 - Discard cached key from grub shell and editor mode
   * 0001-clean-up-crypttab-and-linux-modules-dependency.patch

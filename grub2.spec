@@ -156,7 +156,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        59.1
+Release:        60.1
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -527,6 +527,10 @@ Requires:       s390-tools
 %endif
 %ifarch ppc64 ppc64le
 Requires:       powerpc-utils
+%endif
+%ifarch %{ix86}
+# meanwhile, memtest is available as EFI executable
+Recommends:     memtest86+
 %endif
 
 %if 0%{?only_x86_64:1}
@@ -1559,6 +1563,11 @@ fi
 %endif
 
 %changelog
+* Wed Mar 15 2023 Hans-Peter Jansen <hpj@urpla.net>
+- Meanwhile, memtest86+ gained EFI support, but using the grub
+  command line to run it manually is quite tedious...
+  Adapt 20_memtest86+ to provide a proper menu entry. Executing
+  memtest requires to turn security off in BIOS: (Boot Mode: Other OS).
 * Mon Mar 13 2023 rw@suse.com
 - Tolerate kernel moved out of /boot. (bsc#1184804)
   * grub2-s390x-12-zipl-setup-usrmerge.patch

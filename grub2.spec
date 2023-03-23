@@ -156,7 +156,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        60.1
+Release:        62.1
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -503,6 +503,8 @@ Patch974:       0001-clean-up-crypttab-and-linux-modules-dependency.patch
 Patch975:       0002-discard-cached-key-before-entering-grub-shell-and-ed.patch
 # Make grub more robust against storage race condition causing system boot failures (bsc#1189036)
 Patch976:       0001-ieee1275-ofdisk-retry-on-open-and-read-failure.patch
+Patch977:       0001-loader-linux-Ensure-the-newc-pathname-is-NULL-termin.patch
+Patch978:       0002-Restrict-cryptsetup-key-file-permission-for-better-s.patch
 
 Requires:       gettext-runtime
 %if 0%{?suse_version} >= 1140
@@ -1563,6 +1565,14 @@ fi
 %endif
 
 %changelog
+* Thu Mar 23 2023 Michael Chang <mchang@suse.com>
+- Fix aarch64 kiwi image's file not found due to '/@' prepended to path in
+  btrfs filesystem. (bsc#1209165)
+  * grub2-btrfs-05-grub2-mkconfig.patch
+* Mon Mar 20 2023 Michael Chang <mchang@suse.com>
+- Restrict cryptsetup key file permission for better security (bsc#1207499)
+  * 0001-loader-linux-Ensure-the-newc-pathname-is-NULL-termin.patch
+  * 0002-Restrict-cryptsetup-key-file-permission-for-better-s.patch
 * Wed Mar 15 2023 Hans-Peter Jansen <hpj@urpla.net>
 - Meanwhile, memtest86+ gained EFI support, but using the grub
   command line to run it manually is quite tedious...

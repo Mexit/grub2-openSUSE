@@ -156,7 +156,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        62.1
+Release:        63.1
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -505,6 +505,8 @@ Patch975:       0002-discard-cached-key-before-entering-grub-shell-and-ed.patch
 Patch976:       0001-ieee1275-ofdisk-retry-on-open-and-read-failure.patch
 Patch977:       0001-loader-linux-Ensure-the-newc-pathname-is-NULL-termin.patch
 Patch978:       0002-Restrict-cryptsetup-key-file-permission-for-better-s.patch
+Patch979:       0001-openfw-Ensure-get_devargs-and-get_devname-functions-.patch
+Patch980:       0002-prep_loadenv-Fix-regex-for-Open-Firmware-device-spec.patch
 
 Requires:       gettext-runtime
 %if 0%{?suse_version} >= 1140
@@ -920,11 +922,21 @@ echo "earlycfg: root=$root prefix=$prefix"
 EOF
         cat > ./grub.cfg <<'EOF'
 
-regexp --set 1:bdev --set 2:bpart --set 3:bpath '\(([^,]+)(,?.*)?\)(.*)' "$cmdpath"
+regexp --set 1:bdev --set 2:bpath '\((.*)\)(.*)' "$cmdpath"
+regexp --set 1:bdev --set 2:bpart '(.*[^\])(,.*)' "$bdev"
 
 echo "bdev=$bdev"
 echo "bpart=$bpart"
 echo "bpath=$bpath"
+
+if [ -z "$ENV_FS_UUID" ]; then
+  echo "Reading vars from ($bdev)"
+  prep_load_env "($bdev)"
+fi
+
+echo "ENV_HINT=$ENV_HINT"
+echo "ENV_GRUB_DIR=$ENV_GRUB_DIR"
+echo "ENV_FS_UUID=$ENV_FS_UUID"
 
 if [ "$btrfs_relative_path" = xy ]; then
   btrfs_relative_path=1
@@ -1565,6 +1577,20 @@ fi
 %endif
 
 %changelog
+* Tue Apr 11 2023 Michael Chang <mchang@suse.com>
+- Resolve some issues with OS boot failure on PPC NVMe-oF disks and made
+  enhancements to PPC secure boot's root device discovery config (bsc#1207230)
+- Ensure get_devargs and get_devname functions are consistent
+  * 0001-openfw-Ensure-get_devargs-and-get_devname-functions-.patch
+- Fix regex for Open Firmware device specifier with encoded commas
+  * 0002-prep_loadenv-Fix-regex-for-Open-Firmware-device-spec.patch
+- Fix regular expression in PPC secure boot config to prevent escaped commas
+  from being treated as delimiters when retrieving partition substrings.
+- Use prep_load_env in PPC secure boot config to handle unset host-specific
+  environment variables and ensure successful command execution.
+  * 0004-Introduce-prep_load_env-command.patch
+- Refreshed
+  * 0005-export-environment-at-start-up.patch
 * Thu Mar 23 2023 Michael Chang <mchang@suse.com>
 - Fix aarch64 kiwi image's file not found due to '/@' prepended to path in
   btrfs filesystem. (bsc#1209165)

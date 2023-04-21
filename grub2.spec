@@ -156,7 +156,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        65.3
+Release:        66.1
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -507,6 +507,8 @@ Patch977:       0001-loader-linux-Ensure-the-newc-pathname-is-NULL-termin.patch
 Patch978:       0002-Restrict-cryptsetup-key-file-permission-for-better-s.patch
 Patch979:       0001-openfw-Ensure-get_devargs-and-get_devname-functions-.patch
 Patch980:       0002-prep_loadenv-Fix-regex-for-Open-Firmware-device-spec.patch
+Patch981:       0001-kern-ieee1275-init-Convert-plain-numbers-to-constant.patch
+Patch982:       0002-kern-ieee1275-init-Extended-support-in-Vec5.patch
 
 Requires:       gettext-runtime
 %if 0%{?suse_version} >= 1140
@@ -1577,6 +1579,10 @@ fi
 %endif
 
 %changelog
+* Fri Apr 21 2023 Michael Chang <mchang@suse.com>
+- Fix PowerVS deployment fails to boot with 90 cores (bsc#1208581)
+  * 0001-kern-ieee1275-init-Convert-plain-numbers-to-constant.patch
+  * 0002-kern-ieee1275-init-Extended-support-in-Vec5.patch
 * Tue Apr 18 2023 Michael Chang <mchang@suse.com>
 - Fix no prep partition error on non-PReP architectures by making the
   prep_loadenv module exclusive to powerpc_ieee1275 platform (bsc#1210489)

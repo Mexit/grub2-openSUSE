@@ -157,7 +157,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        68.2
+Release:        69.2
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -1578,6 +1578,8 @@ fi
 %endif
 
 %changelog
+* Thu May  4 2023 Michael Chang <mchang@suse.com>
+- grub2-once: Fix 'sh: terminal_output: command not found' error (bsc#1204563)
 * Wed Apr 26 2023 Gary Ching-Pang Lin <glin@suse.com>
 - Exclude the deprecated EFI location, /usr/lib64/efi/, from
   Tumbleweed and ALP

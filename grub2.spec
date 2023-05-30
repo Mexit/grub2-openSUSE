@@ -157,7 +157,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        69.2
+Release:        70.1
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -504,6 +504,9 @@ Patch979:       0001-openfw-Ensure-get_devargs-and-get_devname-functions-.patch
 Patch980:       0002-prep_loadenv-Fix-regex-for-Open-Firmware-device-spec.patch
 Patch981:       0001-kern-ieee1275-init-Convert-plain-numbers-to-constant.patch
 Patch982:       0002-kern-ieee1275-init-Extended-support-in-Vec5.patch
+# support newer extX filesystem defaults
+Patch990:       0001-fs-ext2-Ignore-checksum-seed-incompat-feature.patch
+Patch991:       0001-fs-ext2-Ignore-the-large_dir-incompat-feature.patch
 
 Requires:       gettext-runtime
 %if 0%{?suse_version} >= 1140
@@ -1578,6 +1581,11 @@ fi
 %endif
 
 %changelog
+* Tue May 30 2023 Dirk Müller <dmueller@suse.com>
+- add 0001-fs-ext2-Ignore-checksum-seed-incompat-feature.patch,
+  0001-fs-ext2-Ignore-the-large_dir-incompat-feature.patch:
+  * support more featureful extX filesystems (backport from
+  upstream git)
 * Thu May  4 2023 Michael Chang <mchang@suse.com>
 - grub2-once: Fix 'sh: terminal_output: command not found' error (bsc#1204563)
 * Wed Apr 26 2023 Gary Ching-Pang Lin <glin@suse.com>

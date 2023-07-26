@@ -157,7 +157,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        70.1
+Release:        71.1
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -1581,6 +1581,10 @@ fi
 %endif
 
 %changelog
+* Wed Jul 26 2023 Michael Chang <mchang@suse.com>
+- Fix error message "unknown command tpm_record_pcrs" with encrypted boot and
+  no tpm device present (bsc#1213547)
+  * 0002-tpm-Disable-tpm-verifier-if-tpm-is-not-present.patch
 * Tue May 30 2023 Dirk Müller <dmueller@suse.com>
 - add 0001-fs-ext2-Ignore-checksum-seed-incompat-feature.patch,
   0001-fs-ext2-Ignore-the-large_dir-incompat-feature.patch:

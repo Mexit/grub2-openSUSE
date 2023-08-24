@@ -157,7 +157,7 @@ BuildRequires:  update-bootloader-rpm-macros
 %endif
 
 Version:        2.06
-Release:        72.2
+Release:        70.65
 Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 Group:          System/Boot
@@ -507,8 +507,6 @@ Patch982:       0002-kern-ieee1275-init-Extended-support-in-Vec5.patch
 # support newer extX filesystem defaults
 Patch990:       0001-fs-ext2-Ignore-checksum-seed-incompat-feature.patch
 Patch991:       0001-fs-ext2-Ignore-the-large_dir-incompat-feature.patch
-
-Patch992:       grub2-change-bash-completion-dir.patch
 
 Requires:       gettext-runtime
 %if 0%{?suse_version} >= 1140
@@ -1367,7 +1365,7 @@ fi
 %endif
 %dir /boot/%{name}
 %ghost %attr(600, root, root) /boot/%{name}/grub.cfg
-%{_datadir}/bash-completion/completions/grub
+%{_sysconfdir}/bash_completion.d/grub
 %config(noreplace) %{_sysconfdir}/default/grub
 %dir %{_sysconfdir}/grub.d
 %{_sysconfdir}/grub.d/README
@@ -1583,13 +1581,6 @@ fi
 %endif
 
 %changelog
-* Thu Aug  3 2023 Gary Ching-Pang Lin <glin@suse.com>
-- Change the bash-completion directory (bsc#1213855)
-  * grub2-change-bash-completion-dir.patch
-* Wed Jul 26 2023 Michael Chang <mchang@suse.com>
-- Fix error message "unknown command tpm_record_pcrs" with encrypted boot and
-  no tpm device present (bsc#1213547)
-  * 0002-tpm-Disable-tpm-verifier-if-tpm-is-not-present.patch
 * Tue May 30 2023 Dirk Müller <dmueller@suse.com>
 - add 0001-fs-ext2-Ignore-checksum-seed-incompat-feature.patch,
   0001-fs-ext2-Ignore-the-large_dir-incompat-feature.patch:

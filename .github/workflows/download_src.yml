@@ -18,15 +18,15 @@ jobs:
 
       - name: Detect new and git version
         run: |
-          echo "latest_ver=$(curl -s ${{ env.URL }}/ | grep -E -o '>grub2-([0-9]*).([0-9]*)-([0-9]*).([0-9]*)' \
+          echo "latest_ver=$(curl -s ${{ env.URL }}/ | grep -E -o '>grub2-([0-9]*).([0-9]*.*)-([0-9]*).([0-9]*)' \
             | sed 's/^.* //;s/>grub2-//;$!d')" >> $GITHUB_ENV
 
           echo "git_ver=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
 
       - name: Download new version
         run: |
-          if [ "$(echo ${{ env.latest_ver }} | grep -E -o '([0-9]*).([0-9]*)-([0-9]*)')" != \
-               "$(echo ${{ env.git_ver }} | grep -E -o '([0-9]*).([0-9]*)-([0-9]*)')" ]; then
+          if [ "$(echo ${{ env.latest_ver }} | grep -E -o '([0-9]*).([0-9]*.*)-([0-9]*)')" != \
+               "$(echo ${{ env.git_ver }} | grep -E -o '([0-9]*).([0-9]*.*)-([0-9]*)')" ]; then
 
             rm -rf *
             curl -L -O ${{ env.URL }}/grub2-${{ env.latest_ver }}.src.rpm
